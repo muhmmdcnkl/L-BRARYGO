@@ -1,0 +1,112 @@
+﻿@model LMS.Models.BookCopy
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Book Copy details</h3>
+            </div>
+            <div class="box-body">
+                <dl class="dl-horizontal">
+                    <dt>ISBN</dt><dd> @Model.Book.ISBN </dd>
+                    <dt>Name</dt><dd> @Model.Book.Name </dd>
+                    <dt>Press</dt><dd> @Model.Book.Press.Name </dd>
+                    <dt>Publisher</dt><dd> @Model.Book.Publisher.Name </dd>
+                    <dt>Published Date</dt><dd> @Model.Book.PublishedDate.GetValueOrDefault().ToShortDateString()</dd>
+                    <dt>Charge</dt><dd> @Model.Book.Charge</dd>
+                    <dt>Penalty Charge</dt><dd> @Model.Book.PenaltyCharge</dd>
+                </dl>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>Copy Number</dt>
+                    <dd> @Model.ID </dd>
+                    <dt>Available</dt>
+                    <dd>
+                        @{
+                            if (Model.Available)
+                            {
+                                @: Yes
+                            }
+                            else
+                            {
+                                @: No
+                            }
+                        }
+                    </dd>
+                    <dt>Location</dt>
+                    <dd> @Model.Location </dd>
+                </dl>
+                <hr />
+                <p>
+                    @{
+                        if (Model.Available)
+                        {
+                            <a class="btn btn-success btn-sm" href="@Url.Action("Create", "Loans", new { id = Model.ID })"><i class="fa fa-cart-plus"> </i> Provide on Loan</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-success btn-sm" href="@Url.Action("Return", "Loans", new { id = Model.ID })"><i class="fa fa-cart-arrow-down"> </i> Return Book</a>
+                        }
+                    }
+                    <a class="btn btn-primary btn-sm" href="@Url.Action("Edit", new { id=Model.ID })"><i class="fa fa-edit"> </i> Edit</a>
+                    <a class="btn btn-warning btn-sm" href="@Url.Action("Index")"><i class="fa fa-angle-left"> </i>  Back to List</a>
+                </p>
+
+                <h4>Loans</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Member ID</th>
+                            <th>Member Name</th>
+                            <th>Loan Type</th>
+                            <th>Issued On</th>
+                            <th>Due Date</th>
+                            <th>Returned On</th>
+                            <th>Loan Charge</th>
+                            <th>Penalty Charge</th>
+                            <th>Loaned By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Loans.OrderByDescending(l => l.IssuedOn).ToList())
+                        {
+                            <tr>
+                                <td>@item.MemberID</td>
+                                <td>@item.Member.FirstName @item.Member.MiddleName @item.Member.LastName</td>
+                                <td>@item.LoanType.Name</td>
+                                <td>@item.IssuedOn.ToShortDateString()</td>
+                                <td>@item.DueDate.GetValueOrDefault().ToShortDateString()</td>
+                                <td>
+                                    @{
+                                        if (item.ReturnedOn == null)
+                                        {
+                                            @: <span class="label label-warning">Not Returned</span>
+                                        }
+                                        else
+                                        {
+                                            @item.ReturnedOn.GetValueOrDefault().ToShortDateString()
+                                        }
+                                    }
+                                </td>
+                                <td>@item.LoanCharge</td>
+                                <td>
+                                    @{
+                                        if (item.ReturnedOn != null)
+                                        {
+                                            @item.PenaltyCharge
+                                        }
+                                    }
+                                </td>
+                                <td>@item.LoanedBy.FullName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+﻿@model LMS.Models.Loan
+
+@{
+    ViewBag.Title = "Details";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Loan details</h3>
+            </div>
+            <div class="box-body">
+                <h6>Book Details</h6>
+                <dl class="dl-horizontal">
+                    <dt>ISBN</dt><dd> @Model.BookCopy.Book.ISBN </dd>
+                    <dt>Name</dt><dd> @Model.BookCopy.Book.Name </dd>
+                    <dt>Press</dt><dd> @Model.BookCopy.Book.Press.Name </dd>
+                    <dt>Publisher</dt><dd> @Model.BookCopy.Book.Publisher.Name </dd>
+                    <dt>Authors</dt>
+                    <dd>
+                        <ul>
+                            @{
+                                foreach (var author in Model.BookCopy.Book.Authors)
+                                {
+                                    <li>@author.FirstName @author.MiddleName @author.LastName</li>
+                                }
+                            }
+                        </ul>
+                    </dd>
+                    <dt>Categories</dt>
+                    <dd>
+                        <ul>
+                            @{
+                                foreach (var category in Model.BookCopy.Book.Categories)
+                                {
+                                    <li> @category.Name </li>
+                                }
+                            }
+                        </ul>
+
+                    </dd>
+                    <dt>Published Date</dt><dd> @Model.BookCopy.Book.PublishedDate.GetValueOrDefault().ToShortDateString()</dd>
+                    <dt>Charge</dt><dd> @Model.BookCopy.Book.Charge</dd>
+                    <dt>Penalty Charge</dt><dd> @Model.BookCopy.Book.PenaltyCharge</dd>
+                </dl>
+                <hr />
+                <h6>Book Copy Details</h6>
+                <dl class="dl-horizontal">
+                    <dt>Copy Number</dt>
+                    <dd> @Model.BookCopy.ID </dd>
+                    <dt>Location</dt>
+                    <dd> @Model.BookCopy.Location </dd>
+                </dl>
+                <hr />
+                <h6>Loan Details</h6>
+                <dl class="dl-horizontal">
+                    <dt>Loan Issued By</dt> <dd> @Model.LoanedBy.FullName </dd>
+                    <dt>Member</dt>
+                    <dd> @Model.Member.FirstName @Model.Member.MiddleName @Model.Member.LastName</dd>
+                    <dt>Loan Type</dt>
+                    <dd> @Model.LoanType.Name</dd>
+                    <dt>Loan Duration</dt>
+                    <dd> @Model.LoanType.Duration Days</dd>
+                    <dt>Issued On</dt>
+                    <dd> @Model.IssuedOn.ToShortDateString()</dd>
+                    <dt>Due Date</dt>
+                    <dd> @Model.DueDate.GetValueOrDefault().ToShortDateString()</dd>
+                    <dt>Returned On</dt>
+                    <dd>
+                            @{
+                                if (Model.ReturnedOn == null)
+                                {
+                                    if (DateTime.Now.Date <= Model.DueDate.GetValueOrDefault().Date)
+                                    {
+                                        <span class="label label-warning">Pending Return</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-warning">Pending Return</span>
+                                        <span class="label label-danger">Late</span>
+                                    }
+                                }
+                                else
+                                {
+                                    @Model.ReturnedOn.GetValueOrDefault().ToShortDateString()
+                                    if (Model.ReturnedOn.GetValueOrDefault().Date <= Model.DueDate.GetValueOrDefault().Date)
+                                    {
+                                        <span class="label label-success">On Time</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-danger">Late</span>
+                                    }
+                                }
+                            }
+                    </dd>
+                    <dt>Loan Charge</dt>
+                    <dd> @Model.LoanCharge</dd>
+                    <dt>Penalty Charge</dt>
+                    <dd> @Model.PenaltyCharge</dd>
+                    <dt>Total Charge</dt>
+                    <dd> @(Model.LoanCharge + Model.PenaltyCharge)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

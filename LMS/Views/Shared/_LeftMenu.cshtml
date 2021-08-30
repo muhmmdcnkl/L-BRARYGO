@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Security.Cryptography
+@{
+    Layout = null;
+}
+
+<aside class="main-sidebar">
+    <section class="sidebar">
+        
+        @if (Request.IsAuthenticated)
+        {
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="http://www.gravatar.com/avatar/?d=identicon&size=160" class="img-circle" alt="User Image" />
+                </div>
+                <div class="pull-left info">
+                    <p>@User.Identity.GetUserName()</p>
+                </div>
+            </div>
+        }
+        <ul class="sidebar-menu">
+            @if (!Request.IsAuthenticated)
+            {
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Account" && ViewContext.RouteData.Values["action"].ToString() == "Login" ? "active" : "")"><a href="~/Account/Login"><i class="fa fa-sign-in"></i> <span>Login</span></a></li>
+            }
+            <li class="header">Book Menu</li>
+            @if (Request.IsAuthenticated)
+            {
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Publishers" ? "active" : "")"><a href="~/Publishers"><i class="fa fa-book"></i> <span>Publisher</span></a></li>
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Authors" ? "active" : "")"><a href="~/Authors"><i class="fa fa-user"></i> <span>Author</span></a></li>
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Press" ? "active" : "")"><a href="~/Press"><i class="fa fa-print"></i> <span>Press</span></a></li>
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Categories" ? "active" : "")"><a href="~/Categories"><i class="fa fa-bookmark"></i> <span>Category</span></a></li>
+            }
+            <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Books" ? "active" : "")"><a href="~/Books"><i class="fa fa-book"></i> <span>Books</span></a></li>
+            <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "BookCopies" ? "active" : "")"><a href="~/BookCopies"><i class="fa fa-book"></i> <span>Book Copy</span></a></li>
+            @if (Request.IsAuthenticated)
+            {
+                <li class="header">Member Menu</li>
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Memberships" ? "active" : "")"><a href="~/Memberships"><i class="fa fa-th"></i> <span>Membership Categories</span></a></li>
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Members" ? "active" : "")"><a href="~/Members"><i class="fa fa-users"></i> <span>Members</span></a></li>
+                <li class="header">Loan Menu</li>
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "LoanTypes" ? "active" : "")"><a href="~/LoanTypes"><i class="fa fa-bank"></i> <span>Loan Types</span></a></li>
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Loans" ? "active" : "")"><a href="~/Loans"><i class="fa fa-usd"></i> <span>Loans</span></a></li>
+            }
+            @if (ViewContext.HttpContext.User.IsInRole("Manager"))
+            {
+                <li class="header">User Menu</li>
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Users" ? "active" : "")"><a href="~/Users"><i class="fa fa-users"></i> <span>Users</span></a></li>
+            }
+            @if (Request.IsAuthenticated)
+            {
+                <li class="header">Reports</li>
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Reports" && ViewContext.RouteData.Values["action"].ToString() == "OldBooks" ? "active" : "")"><a href="~/Reports/OldBooks"><i class="fa fa-file-text-o"></i> <span>Old Books</span></a></li>
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Reports" && ViewContext.RouteData.Values["action"].ToString() == "InactiveBooks" ? "active" : "")"><a href="~/Reports/InactiveBooks"><i class="fa fa-bar-chart"></i> <span>Inactive Books</span></a></li>    
+                <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Reports" && ViewContext.RouteData.Values["action"].ToString() == "InactiveMembers" ? "active" : "")"><a href="~/Reports/InactiveMembers"><i class="fa fa-user-times"></i> <span>Inactive Members</span></a></li>
+            }
+        </ul>
+    </section>
+</aside>

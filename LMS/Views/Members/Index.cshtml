@@ -1,0 +1,97 @@
+﻿@model PagedList.IPagedList<LMS.Models.Member>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Member";
+	ViewBag.TitleSmall = "All";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <a class="btn btn-primary pull-right" href="@Url.Action("Create")"><i class="fa fa-plus"></i> Add</a>
+                @using (Html.BeginForm("Index", "Members", FormMethod.Get))
+                {
+                    <div class="col-sm-4">
+                        <div class="input-group add-on">
+                            @Html.TextBox("SearchString", ViewBag.SearchString as string, new { @class = "form-control", @placeholder = "Search by MemberID, Member Name..." })
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="box-body">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                <table class="table table-bordered">
+					<thead>
+						<tr>
+                            <th>
+                                ID
+                            </th>
+							<th>
+								First Name
+							</th>
+							<th>
+								Middle Name
+							</th>
+							<th>
+								Last Name
+							</th>
+                            <th>
+                                Membership Type
+                            </th>
+                            <th>
+                                Current Loans
+                            </th>
+                            <th>
+                                Total Loans Allowed
+                            </th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+
+						@foreach (var item in Model) {
+							<tr>
+                                <th>
+                                    @item.ID
+                                </th>
+								<td>
+									@Html.DisplayFor(modelItem => item.FirstName)
+								</td>
+								<td>
+									@Html.DisplayFor(modelItem => item.MiddleName)
+								</td>
+								<td>
+									@Html.DisplayFor(modelItem => item.LastName)
+								</td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Membership.Name)
+                                </td>
+                                <td>
+                                    @item.Loans.Where(l => l.ReturnedOn == null).Count()
+                                </td>
+                                <td>
+                                    @item.Membership.MaxLoans
+                                </td>
+								<td>
+									<a class="btn btn-primary btn-sm" href="@Url.Action("Edit", new { id=item.ID })"><i class="fa fa-edit"> </i> Edit</a>
+                                    <a class="btn btn-warning btn-sm" href="@Url.Action("Details", new { id=item.ID })"><i class="fa fa-info"> </i> Details</a>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+			</div>
+			<div class="box-footer clearfix">
+                <div class="pull-right">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, SearchString = ViewBag.SearchString }))
+                </div>
+            </div>
+		</div>
+	</div>
+</div>

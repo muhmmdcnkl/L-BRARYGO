@@ -1,0 +1,53 @@
+﻿@model PagedList.IPagedList<LMS.Models.Publisher>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Publisher";
+	ViewBag.TitleSmall = "All";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <a class="btn btn-primary pull-right" href="@Url.Action("Create")"><i class="fa fa-plus"></i> Add</a>
+            </div>
+            <div class="box-body">
+                <table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>
+								Publisher Name
+							</th>
+							<th>
+								Location
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+
+						@foreach (var item in Model) {
+							<tr>
+								<td>
+									@Html.DisplayFor(modelItem => item.Name)
+								</td>
+								<td>
+									@Html.DisplayFor(modelItem => item.Location)
+								</td>
+								<td>
+									<a class="btn btn-primary btn-sm" href="@Url.Action("Edit", new { id=item.ID })"><i class="fa fa-edit"> </i> Edit</a>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+			<div class="box-footer clearfix">
+                <div class="pull-right">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                </div>
+            </div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,107 @@
+﻿@model LMS.Models.Book
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Book Details</h3>
+            </div>
+            <div class="box-body">
+                <dl class="dl-horizontal">
+                    <dt>ISBN</dt>
+                    <dd> @Model.ISBN </dd>
+                    <dt>Name</dt>
+                    <dd> @Model.Name </dd>
+                    <dt>Press</dt>
+                    <dd> @Model.Press.Name </dd>
+                    <dt>Publisher</dt>
+                    <dd> @Model.Publisher.Name </dd>
+                    <dt>Published Date</dt>
+                    <dd> @Model.PublishedDate.GetValueOrDefault().ToShortDateString()</dd>
+                    <dt>Number of Copies</dt>
+                    <dd> @Model.Copies.Count()</dd>
+                    <dt>Authors</dt>
+                    <dd>
+                        <ul>
+                            @{
+                                foreach (var author in Model.Authors)
+                                {
+                                    <li>@author.FirstName @author.MiddleName @author.LastName</li>
+                                }
+                            }
+                        </ul>
+                    </dd>
+                    <dt>Categories</dt>
+                    <dd>
+                        <ul>
+                            @{
+                                foreach (var category in Model.Categories)
+                                {
+                                    <li> @category.Name </li>
+                                }
+                            }
+                        </ul>
+
+                    </dd>
+                </dl>
+                <hr />
+                <p>
+                    <a class="btn btn-primary btn-sm" href="@Url.Action("Edit", new { id=Model.ID })"><i class="fa fa-edit"> </i> Edit</a>
+                    <a class="btn btn-warning btn-sm" href="@Url.Action("Index")"><i class="fa fa-angle-left"> </i>  Back to List</a>
+                </p>
+
+                <h4>Book Copies</h4>
+                <a class="btn btn-primary pull-right" href="@Url.Action("Create", "BookCopies", new { SelectedBookID = Model.ID })"><i class="fa fa-plus"></i> Add</a>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Copy Number</th>
+                            <th>Location</th>
+                            <th>Available</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Copies)
+                        {
+                            <tr>
+                                <td>@item.ID</td>
+                                <td>@item.Location</td>
+                                <td>
+                                    @{
+                                        if (item.Available)
+                                        {
+                                            @: <span class="label label-success">Available</span>
+                                        }
+                                        else
+                                        {
+                                            @: <span class="label label-warning">On Loan</span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                        if (item.Available)
+                                        {
+                                            <a class="btn btn-success btn-sm" href="@Url.Action("Create", "Loans", new { id = item.ID })"><i class="fa fa-cart-plus"> </i> Provide on Loan</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success btn-sm" href="@Url.Action("Return", "Loans", new { id = item.ID })"><i class="fa fa-cart-arrow-down"> </i> Return Book</a>
+                                        }
+                                    }
+                                    <a class="btn btn-primary btn-sm" href="@Url.Action("Edit", "BookCopies", new { id = item.ID })"><i class="fa fa-edit"> </i> Edit</a>
+                                    <a class="btn btn-warning btn-sm" href="@Url.Action("Details", "BookCopies", new { id = item.ID })"><i class="fa fa-info"> </i> Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,247 @@
+﻿@model LMS.Models.Book
+
+@{
+    ViewBag.Title = "Book";
+	ViewBag.TitleSmall = "Create";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Create Book</h3>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                <div class="box-body">
+
+                    @Html.AntiForgeryToken()
+					@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+					<div class="form-group">
+						@Html.LabelFor(model => model.Name)
+						@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+						@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+					</div>
+
+					<div class="form-group">
+						@Html.LabelFor(model => model.ISBN)
+						@Html.EditorFor(model => model.ISBN, new { htmlAttributes = new { @class = "form-control" } })
+						@Html.ValidationMessageFor(model => model.ISBN, "", new { @class = "text-danger" })
+					</div>
+
+                    <button type="button" class="btn pull-right btn-primary btn-sm" data-toggle="modal" data-target="#authorsModal">
+                        Add Author
+                    </button>
+
+                    <div class="form-group">
+                        <label for="SelectedAuthors">Authors</label>
+                        <select name="SelectedAuthors" multiple class="form-control">
+                            @{
+                                foreach(var author in ViewBag.Authors)
+                                {
+                                    <option @(Html.Raw(author.Assigned ? "selected=\"selected\"" : "")) value="@author.AuthorID">@author.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn pull-right btn-primary btn-sm" data-toggle="modal" data-target="#categoriesModal">
+                        Add Category
+                    </button>
+                    <div class="form-group">
+                        <label for="SelectedCategories">Categories</label>
+                        <select name="SelectedCategories" multiple class="form-control">
+                            @{
+                                foreach (var category in ViewBag.Categories)
+                                {
+                                    <option @(Html.Raw(category.Assigned ? "selected=\"selected\"" : "")) value="@category.CategoryID">@category.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+					<div class="form-group">
+						@Html.LabelFor(model => model.PublisherID, "Publisher")
+						@Html.DropDownList("PublisherID", null, htmlAttributes: new { @class = "form-control" })
+						@Html.ValidationMessageFor(model => model.PublisherID, "", new { @class = "text-danger" })
+					</div>
+
+					<div class="form-group">
+						@Html.LabelFor(model => model.PressID, "Press")
+						@Html.DropDownList("PressID", null, htmlAttributes: new { @class = "form-control" })
+						@Html.ValidationMessageFor(model => model.PressID, "", new { @class = "text-danger" })
+					</div>
+
+					<div class="form-group">
+						@Html.LabelFor(model => model.PublishedDate)
+						@Html.EditorFor(model => model.PublishedDate, new { htmlAttributes = new { @class = "form-control" } })
+						@Html.ValidationMessageFor(model => model.PublishedDate, "", new { @class = "text-danger" })
+					</div>
+
+					<div class="form-group">
+						@Html.LabelFor(model => model.Charge)
+						@Html.EditorFor(model => model.Charge, new { htmlAttributes = new { @class = "form-control" } })
+						@Html.ValidationMessageFor(model => model.Charge, "", new { @class = "text-danger" })
+					</div>
+
+					<div class="form-group">
+						@Html.LabelFor(model => model.PenaltyCharge)
+						@Html.EditorFor(model => model.PenaltyCharge, new { htmlAttributes = new { @class = "form-control" } })
+						@Html.ValidationMessageFor(model => model.PenaltyCharge, "", new { @class = "text-danger" })
+					</div>
+
+				</div>
+
+                <div class="box-footer">
+                    <a class="btn btn-warning btn-sm" href="@Url.Action("Index")"><i class="fa fa-angle-double-left"> </i> Back to List</a>
+                    <button type="submit" class="btn btn-success pull-right"><i class="fa fa-save"></i> Save</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal  fade" id="authorsModal" tabindex="-1" role="dialog" aria-labelledby="authorsModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="authorsModalLabel">Add Author</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Authors", FormMethod.Post, new { @id="addAuthorForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <p class="text-success"></p>
+                    <div class="form-group">
+                        <label class="control-label" for="FirstName">First Name</label>
+                        <input class="form-control text-box single-line" id="FirstName" name="FirstName" type="text" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="MiddleName">Middle Name</label>
+                        <input class="form-control text-box single-line" id="MiddleName" name="MiddleName" type="text" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="LastName">Last Name</label>
+                        <input class="form-control text-box single-line" id="LastName" name="LastName" type="text" value="">
+                    </div>
+                    <button type="submit" hidden></button>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button  id="addAuthor" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal  fade" id="categoriesModal" tabindex="-1" role="dialog" aria-labelledby="categoriesModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="categoriesModalLabel">Add Category</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Categories", FormMethod.Post, new { @id = "addCategoryForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <p class="text-success"></p>
+                    <div class="form-group">
+                        <label class="control-label" for="Name">Name</label>
+                        <input class="form-control text-box single-line" id="Name" name="Name" type="text" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <label>
+                                <div class="checkbox">
+                                    <input class="check-box" id="AgeRestricted" name="AgeRestricted" type="checkbox" value="true">
+                                    Age Restricted
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" hidden></button>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="addCategory" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        var body = $("body");
+
+        var processAuthorForm = function (e) {
+            var form = $("#addAuthorForm");
+            var method = 'POST';
+            form.find("span.text-danger").remove();
+
+            $.ajax({
+                type: method,
+                url: form.prop('action'),
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.Error === true) {
+                        $.each(response.Errors, function (key, value) {
+                            form.find("#" + key).parent().append($("<span>").addClass("text-danger").html(value[0]));
+                        });
+                    } else {
+                        $("select[name=SelectedAuthors]").append($('<option>', {
+                            value: response.ID,
+                            text: response.FirstName + " " + (response.MiddleName || "") + " " + response.LastName
+                        }).prop('selected', 'selected'));
+                        form.find('.text-success').html("Author Added");
+                        form[0].reset();
+                    }
+                }
+            });
+
+            e.preventDefault();
+        };
+
+        var processCategoryForm = function (e) {
+            var form = $("#addCategoryForm");
+            var method = 'POST';
+            form.find("span.text-danger").remove();
+
+            $.ajax({
+                type: method,
+                url: form.prop('action'),
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.Error === true) {
+                        $.each(response.Errors, function (key, value) {
+                            form.find("#" + key).parent().append($("<span>").addClass("text-danger").html(value[0]));
+                        });
+                    } else {
+                        $("select[name=SelectedCategories]").append($('<option>', {
+                            value: response.ID,
+                            text: response.Name
+                        }).prop('selected', 'selected'));
+                        form.find('.text-success').html("Category Added");
+                        form[0].reset();
+                    }
+                }
+            });
+
+            e.preventDefault();
+        };
+
+        body.on('click', '#addAuthor', processAuthorForm);
+        body.on('submit', '#addAuthorForm', processAuthorForm);
+        body.on('click', '#addCategory', processCategoryForm);
+        body.on('submit', '#addCategoryForm', processCategoryForm);
+    </script>
+}

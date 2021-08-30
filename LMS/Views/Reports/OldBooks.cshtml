@@ -1,0 +1,85 @@
+﻿@model ICollection<LMS.Models.BookCopy>
+
+@{
+    ViewBag.Title = "Book Copies";
+    ViewBag.TitleSmall = "Older Than a Year and Not On Loan";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                Book Name
+                            </th>
+                            <th>
+                                Publisher Name
+                            </th>
+                            <th>
+                                Authors
+                            </th>
+                            <th>
+                                Categories
+                            </th>
+                            <th>
+                                Copy Number
+                            </th>
+                            <th>
+                                Location
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Book.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Book.Publisher.Name)
+                                </td>
+                                <td>
+                                    <ul>
+                                        @{
+                                            foreach (var author in item.Book.Authors)
+                                            {
+                                                <li>@author.FirstName @author.MiddleName @author.LastName</li>
+                                            }
+                                        }
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul>
+                                        @{
+                                            foreach (var category in item.Book.Categories)
+                                            {
+                                                <li> @category.Name </li>
+                                            }
+                                        }
+                                    </ul>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Location)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+			</div>
+			<div class="box-footer">
+                <a class="btn btn-warning btn-sm pull-right"
+                   href="@Url.Action("ClearOldBooks")">
+                    <i class="fa fa-trash"> </i> Clear Old Books
+                </a>
+            </div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<LMS.ViewModels.UserViewModel>
+
+@{
+    ViewBag.Title = "Users";
+	ViewBag.TitleSmall = "All";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <a class="btn btn-primary pull-right" href="@Url.Action("Create")"><i class="fa fa-plus"></i> Add</a>
+            </div>
+            <div class="box-body">
+                <table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Roles</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+
+						@foreach (var item in Model) {
+							<tr>
+								<td>
+									@item.ID
+								</td>
+								<td>
+									@item.Name
+								</td>
+                                <td>
+                                    @item.Email
+                                </td>
+                                <td>
+                                    @foreach(var role in item.Roles)
+                                    {
+                                        @role <br />
+                                    }
+                                </td>
+								<td>
+									<a class="btn btn-primary btn-sm" href="@Url.Action("Edit", new { id=item.ID })"><i class="fa fa-edit"> </i> Edit</a>
+                                    <a class="btn btn-warning btn-sm" href="@Url.Action("ChangePassword", new { id=item.ID })">Change Password</a>
+									<a class="btn btn-danger btn-sm" href="@Url.Action("Delete", new { id=item.ID })"><i class="fa fa-trash"> </i> Delete</a>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

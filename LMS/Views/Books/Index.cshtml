@@ -1,0 +1,158 @@
+﻿@model PagedList.IPagedList<LMS.Models.Book>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Book";
+	ViewBag.TitleSmall = "All";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <div class="row">
+                    <div class="col-md-12">
+                        <a class="btn btn-primary pull-right" href="@Url.Action("Create")"><i class="fa fa-plus"></i> Add</a>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    @using (Html.BeginForm("Index", "Books", FormMethod.Get, new { @id = "search-form" }))
+                    {
+                        <div class="col-sm-4">
+                            <div class="input-group add-on">
+                                @Html.TextBox("SearchString", ViewBag.SearchString as string, new { @class = "form-control", @placeholder = "Search by Book Name, Publisher, Author..." })
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="checkbox checkbox-inline">
+                                <label>
+                                    @Html.CheckBox("CopyAvailable", ViewBag.CopyAvailable as bool?) Having At Least 1 Copy Available
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+
+                            <div class="form-group">
+                                <label class="col-sm-4 text-right">Order By</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="SortOrder">
+                                        <option value="0" @Html.Raw(!ViewBag.SortOrderDesc ? " selected=\"selected\"" : "")>Published Date - Oldest First</option>
+                                        <option value="1" @Html.Raw(ViewBag.SortOrderDesc ? " selected=\"selected\"" : "")>Published Date - Newest First</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-bordered">
+					<thead>
+						<tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Book Name
+                            </th>
+                            <th>
+                                ISBN
+                            </th>
+							<th>
+								Press
+							</th>
+							<th>
+								Publisher
+							</th>
+                            <th>
+                                Authors
+                            </th>
+                            <th>
+                                Categories
+                            </th>
+                            <th>
+                                Copies
+                            </th>
+							<th>
+								Published Date
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+
+						@foreach (var item in Model) {
+							<tr>
+                                <td>
+                                    @item.ID
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ISBN)
+                                </td>
+								<td>
+									@Html.DisplayFor(modelItem => item.Press.Name)
+								</td>
+								<td>
+									@Html.DisplayFor(modelItem => item.Publisher.Name)
+								</td>
+                                <td>
+                                    <ul>
+                                        @{
+                                            foreach (var author in item.Authors)
+                                            {
+                                                @: <li>@author.FirstName @author.MiddleName @author.LastName</li>
+                                            }
+                                        }
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul>
+                                        @{
+                                            foreach (var category in item.Categories)
+                                            {
+                                                @: <li> @category.Name </li>
+                                            }
+                                        }
+                                    </ul>
+                                </td>
+                                <td>
+                                    <span class="label label-success">@item.Copies.Where(c => c.Available).Count() Available</span> <br />
+                                    <span class="label label-warning">@item.Copies.Where(c => !c.Available).Count() On-Loan</span>
+                                </td>
+								<td>
+									@Html.DisplayFor(modelItem => item.PublishedDate)
+								</td>
+								<td>
+									<a class="btn btn-primary btn-sm" href="@Url.Action("Edit", new { id=item.ID })"><i class="fa fa-edit"> </i> Edit</a>
+                                    <a class="btn btn-warning btn-sm" href="@Url.Action("Details", new { id = item.ID })"><i class="fa fa-info"> </i> Details</a>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+			<div class="box-footer clearfix">
+                <div class="pull-right">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, SearchString = ViewBag.SearchString, CopyAvailable = ViewBag.CopyAvailable }))
+                </div>
+            </div>
+		</div>
+	</div>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#search-form").on('change', 'input, select', function () {
+            $(this).closest('form').submit();
+        });
+    });
+</script>   
+}

@@ -1,0 +1,94 @@
+﻿@model LMS.Models.Loan
+
+@{
+    ViewBag.Title = "Loan";
+	ViewBag.TitleSmall = "Create";
+    var BookCopy = ViewBag.BookCopy;
+}
+<div class="row">
+    <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Issue Loan</h3>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                <div class="box-body">
+
+                    <dl class="dl-horizontal">
+                        <dt>ISBN</dt>
+                        <dd> @BookCopy.Book.ISBN </dd>
+                        <dt>Name</dt>
+                        <dd> @BookCopy.Book.Name </dd>
+                        <dt>Press</dt>
+                        <dd> @BookCopy.Book.Press.Name </dd>
+                        <dt>Publisher</dt>
+                        <dd> @BookCopy.Book.Publisher.Name </dd>
+                        <dt>Published Date</dt>
+                        <dd> @BookCopy.Book.PublishedDate</dd>
+                        <dt>Charge</dt>
+                        <dd> @BookCopy.Book.Charge / day</dd>
+                        <dt>Penalty Charge</dt>
+                        <dd> @BookCopy.Book.PenaltyCharge / day</dd>
+                        <dt>Authors</dt>
+                        <dd>
+                            <ul>
+                                @{
+                                    foreach (var author in BookCopy.Book.Authors)
+                                    {
+                                        <li>@author.FirstName @author.MiddleName @author.LastName</li>
+                                    }
+                                }
+                            </ul>
+                        </dd>
+                        <dt>Categories</dt>
+                        <dd>
+                            <ul>
+                                @{
+                                    foreach (var category in BookCopy.Book.Categories)
+                                    {
+                                        <li> @category.Name </li>
+                                    }
+                                }
+                            </ul>
+
+                        </dd>
+                    </dl>
+                    <hr />
+
+
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+                    
+                    <input type="hidden" hidden name="BookCopyID" value="@BookCopy.ID"/>
+					<div class="form-group">
+						@Html.LabelFor(model => model.MemberID, "Member", htmlAttributes: new { @class = "control-label col-sm-2" })
+						<div class="col-sm-10">
+							@Html.DropDownList("MemberID", null, htmlAttributes: new { @class = "form-control" })
+							@Html.ValidationMessageFor(model => model.MemberID, "", new { @class = "text-danger" })
+						</div>
+					</div>
+
+					<div class="form-group">
+						@Html.LabelFor(model => model.LoanTypeID, "Loan Type", htmlAttributes: new { @class = "control-label col-sm-2" })
+						<div class="col-sm-10">
+							@Html.DropDownList("LoanTypeID", null, htmlAttributes: new { @class = "form-control" })
+							@Html.ValidationMessageFor(model => model.LoanTypeID, "", new { @class = "text-danger" })
+						</div>
+					</div>
+
+				</div>
+
+                <div class="box-footer">
+                    <a class="btn btn-warning btn-sm" href="@Url.Action("Index")"><i class="fa fa-angle-double-left"> </i> Back to List</a>
+                    <button type="submit" class="btn btn-success pull-right"><i class="fa fa-cart-plus"></i> Issue Loan</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

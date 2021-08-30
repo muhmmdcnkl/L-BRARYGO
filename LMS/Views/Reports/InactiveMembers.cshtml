@@ -1,0 +1,84 @@
+﻿@model ICollection<LMS.Models.Member>
+
+@{
+    ViewBag.Title = "Inactive Memberss";
+    ViewBag.TitleSmall = "Not Loaned Any Books in Last 31 Days";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td>
+                                ID
+                            </td>
+                            <th>
+                                First Name
+                            </th>
+                            <th>
+                                Middle Name
+                            </th>
+                            <th>
+                                Last Name
+                            </th>
+                            <th>
+                                Address
+                            </th>
+                            <th>
+                                Last Loaned On
+                            </th>
+                            <th>
+                                Days Since Last Loan
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.ID
+                                </td>
+                                <td>
+                                    @item.FirstName
+                                </td>
+                                <td>
+                                    @item.MiddleName
+                                </td>
+                                <td>
+                                    @item.LastName
+                                </td>
+                                <td>
+                                    @item.Address
+                                </td>
+                                <td>
+                                    @{ 
+                                        if (item.Loans.Count() > 0)
+                                        {
+                                            @item.Loans.OrderByDescending(l => l.ID).First().IssuedOn
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                        if (item.Loans.Count() > 0)
+                                        {
+                                            @: @((DateTime.Now - item.Loans.OrderByDescending(l => l.ID).First().IssuedOn).Days) Days
+                                        }else
+                                        {
+                                            @: Never Loaned Any Book
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
